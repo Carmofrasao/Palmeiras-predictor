@@ -22,7 +22,6 @@ def obter_resultados_palmeiras(api_key, team_id, season):
 def processar_resultados(resultados, team_id):
     dados = []
     for jogo in resultados['matches']:
-        print(jogo)
         if jogo['status'] == 'FINISHED':
             if jogo['score']['winner'] == 'HOME_TEAM' and jogo['homeTeam']['id'] == team_id:
                 resultado = 'vitoria'
@@ -51,44 +50,39 @@ resultados = obter_resultados_palmeiras(api_key, team_id, season)
 
 # Processar os resultados do Palmeiras
 dados_jogos = processar_resultados(resultados, team_id)
-print(dados_jogos)
 
 # Criar DataFrame
 df = pd.DataFrame(dados_jogos)
 
 # Mapear os valores para números
 mapeamento_resultado = {'vitoria': 1, 'empate': 0, 'derrota': -1}
-mapeamento_humor = {'feliz': 1, 'neutro': 0, 'irritado': -1}
 
 df['resultado'] = df['resultado'].map(mapeamento_resultado)
-df['humor'] = df['humor'].map(mapeamento_humor)
 
-# Separar os dados em características (X) e alvo (y)
-X = df[['resultado']]
-y = df['humor']
+soma = sum(df['resultado'])
 
-# Dividir os dados em conjunto de treinamento e teste
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+media = soma/len(df['resultado'])
 
-# Treinar um modelo de Random Forest
-modelo = RandomForestClassifier()
-modelo.fit(X_train, y_train)
+media = -0.7
 
-# Avaliar a precisão do modelo
-y_pred = modelo.predict(X_test)
-# print(f"Acurácia do modelo: {accuracy_score(y_test, y_pred)}")
+if media == -1:
+    print('O homem esta Enfurecido >_<')
+elif media > -1 and media <= -0.7:
+    print(r'O homem esta Irritado ಠ_ಠ')
+elif media > -0.7 and media <= -0.4:
+    print('O homem esta Frustrado -_-')
+elif media > -0.4 and media <= -0.1:
+    print('O homem esta Chateado :-(')
+elif media > -0.1 and media < 0:
+    print('O homem esta Desanimado T_T')
+elif media == 0:
+    print('O homem esta Neutro :-|')
+elif media > 0 and media <= 0.3:
+    print('O homem esta Contente :-)')
+elif media > 0.3 and media <= 0.6:
+    print('O homem esta Animado ^_^')
+elif media > 0.6 and media < 1:
+    print('O homem esta Eufórico \\(^o^)/')
+elif midia == 1:
+    print('O homem esta Radiante (*^▽^*)')
 
-# Função para prever o humor com base em um novo resultado
-def prever_humor(resultado):
-    # Mapear o resultado para o valor numérico correspondente
-    resultado_mapeado = mapeamento_resultado[resultado]
-    # Criar um DataFrame com o mesmo formato dos dados de treinamento
-    entrada = pd.DataFrame([[resultado_mapeado]], columns=['resultado'])
-    # Fazer a previsão
-    humor_previsto = modelo.predict(entrada)
-    # Mapear de volta para o valor de humor correspondente
-    mapeamento_humor_inverso = {1: 'feliz', 0: 'neutro', -1: 'irritado'}
-    return mapeamento_humor_inverso[humor_previsto[0]]
-
-# Fazer uma previsão de acordo com o ultimo jogo
-print(f"Humor previsto: {prever_humor(dados_jogos[-1]['resultado'])}")
