@@ -2,9 +2,6 @@
 
 import requests
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
 
 # Função para obter resultados do Palmeiras usando a API do Football Data
 def obter_resultados_palmeiras(api_key, team_id, season):
@@ -63,8 +60,6 @@ soma = sum(df['resultado'])
 
 media = soma/len(df['resultado'])
 
-media = -0.7
-
 if media == -1:
     print('O homem esta Enfurecido >_<')
 elif media > -1 and media <= -0.7:
@@ -84,5 +79,5 @@ elif media > 0.3 and media <= 0.6:
 elif media > 0.6 and media < 1:
     print('O homem esta Eufórico \\(^o^)/')
 elif midia == 1:
-    print('O homem esta Radiante (*^▽^*)')
+    print('O homem esta Radiante (*^▽ ^*)')
 
